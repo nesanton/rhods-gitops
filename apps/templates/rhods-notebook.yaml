@@ -29,4 +29,12 @@ spec:
     kind: Notebook
     jqPathExpressions:
     - .spec.template.spec.containers[] | select(.name == "oauth-proxy")
+  - group: kubeflow.org
+    kind: Notebook
+    jqPathExpressions:
+    - .spec.template.spec.volumes[] | select(.name == "oauth-config")
+  - group: kubeflow.org
+    kind: Notebook
+    jqPathExpressions:
+    - .spec.template.spec.volumes[] | select(.name == "tls-certificates")
 {{ end }}
