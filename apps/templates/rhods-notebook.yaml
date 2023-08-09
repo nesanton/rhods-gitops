@@ -20,4 +20,13 @@ spec:
         user: {{ . }}
         user_urlencoded: {{ . | replace "_" "-5f" | replace "-" "-2d" | replace "@" "-40" | replace "." "-2e" }}
         base_domain: {{ $.Values.base_domain }}
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+  ignoreDifferences:
+  - group: kubeflow.org
+    kind: Notebook
+    jqPathExpressions:
+    - .spec.template.spec.containers[] | select(.name == "oauth-proxy")
 {{ end }}
