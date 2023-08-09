@@ -1,0 +1,18 @@
+### These values will be replaced from upstream argocd application
+user: place-holder
+user_urlencoded: place-2dholder
+base_domain: apps.example.org
+###
+
+notebook:
+  storage:
+    size: 1Gi
+    class: managed-csi
+  resources:
+    limits:
+      cpu: 1
+      memory: 2Gi
+    requests:
+      cpu: 500m
+      memory: 1Gi
+  image: image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/s2i-minimal-notebook:2023.1

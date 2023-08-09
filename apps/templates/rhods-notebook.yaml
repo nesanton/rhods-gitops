@@ -1,0 +1,23 @@
+{{ range .Values.users -}}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: jupyter-nb-{{ . | replace "_" "-" | replace "@" "-" | replace "." "-" }}
+  namespace: openshift-gitops
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: rhods-notebooks
+    server: {{ $.Values.spec.destination.server }}
+  project: default
+  source:
+    path: rhods-notebook
+    repoURL: {{ $.Values.spec.source.repoURL }}
+    helm:
+      values: |
+        user: {{ . }}
+        user_urlencoded: {{ . | replace "_" "-5f" | replace "-" "-2d" | replace "@" "-40" | replace "." "-2e" }}
+        base_domain: {{ $.Values.base_domain }}
+{{ end }}

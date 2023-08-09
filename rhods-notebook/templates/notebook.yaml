@@ -1,0 +1,86 @@
+apiVersion: kubeflow.org/v1
+kind: Notebook
+metadata:
+  annotations:
+    notebooks.opendatahub.io/inject-oauth: "true"
+    notebooks.opendatahub.io/oauth-logout-url: https://rhods-dashboard-redhat-ods-applications.{{ .Values.base_domain }}/notebookController/{{ .Values.user_urlencoded }}/home
+    opendatahub.io/link: https://jupyter-nb-{{ .Values.user_urlencoded }}-rhods-notebooks.{{ .Values.base_domain }}/notebook/rhods-notebooks/jupyter-nb-{{ .Values.user_urlencoded }}
+    opendatahub.io/username: {{ .Values.user }}
+  labels:
+    app: jupyter-nb-{{ .Values.user_urlencoded }}
+    opendatahub.io/dashboard: "true"
+    opendatahub.io/odh-managed: "true"
+    opendatahub.io/user: {{ .Values.user_urlencoded }}
+  name: jupyter-nb-{{ .Values.user_urlencoded }}
+  namespace: rhods-notebooks
+spec:
+  template:
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - preference:
+              matchExpressions:
+              - key: nvidia.com/gpu.present
+                operator: NotIn
+                values:
+                - "true"
+            weight: 1
+      containers:
+      - env:
+        - name: NOTEBOOK_ARGS
+          value: |-
+            --ServerApp.port=8888
+                              --ServerApp.token=''
+                              --ServerApp.password=''
+                              --ServerApp.base_url=/notebook/rhods-notebooks/jupyter-nb-{{ .Values.user_urlencoded }}
+                              --ServerApp.quit_button=False
+                              --ServerApp.tornado_settings={"user":"{{ .Values.user_urlencoded }}","hub_host":"https://rhods-dashboard-redhat-ods-applications.{{ .Values.base_domain }}","hub_prefix":"/notebookController/{{ .Values.user_urlencoded }}"}
+        - name: JUPYTER_IMAGE
+          value: {{ .Values.notebook.image }}
+        - name: JUPYTER_NOTEBOOK_PORT
+          value: "8888"
+        image: {{ .Values.notebook.image }}
+        imagePullPolicy: Always
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /notebook/rhods-notebooks/jupyter-nb-{{ .Values.user_urlencoded }}/api
+            port: notebook-port
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 1
+        name: jupyter-nb-{{ .Values.user_urlencoded }}
+        ports:
+        - containerPort: 8888
+          name: notebook-port
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /notebook/rhods-notebooks/jupyter-nb-{{ .Values.user_urlencoded }}/api
+            port: notebook-port
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          limits:
+            cpu: "{{ .Values.notebook.resources.limits.cpu }}"
+            memory: {{ .Values.notebook.resources.limits.memory }}
+          requests:
+            cpu: "{{ .Values.notebook.resources.requests.cpu }}"
+            memory: {{ .Values.notebook.resources.requests.memory }}
+        volumeMounts:
+        - mountPath: /opt/app-root/src
+          name: jupyterhub-nb-{{ .Values.user_urlencoded }}-pvc
+        workingDir: /opt/app-root/src
+      enableServiceLinks: false
+      serviceAccountName: jupyter-nb-{{ .Values.user_urlencoded }}
+      volumes:
+      - name: jupyterhub-nb-{{ .Values.user_urlencoded }}-pvc
+        persistentVolumeClaim:
+          claimName: jupyterhub-nb-{{ .Values.user_urlencoded }}-pvc

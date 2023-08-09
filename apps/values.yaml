@@ -1,0 +1,11 @@
+users:
+  - userthree@example.org
+  - user-four@example.org
+  - user-six@example.org
+base_domain: apps.example.org
+spec:
+  destination:
+    server: https://kubernetes.default.svc
+  source:
+    repoURL: https://github.com/nesanton/rhods-gitops
+    targetRevision: HEAD

@@ -1,0 +1,16 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    opendatahub.io/dashboard: "true"
+  name: jupyter-nb-{{ .Values.user_urlencoded }}-notebook-view
+  namespace: rhods-notebooks
+rules:
+- apiGroups:
+  - kubeflow.org
+  resourceNames:
+  - jupyter-nb-{{ .Values.user_urlencoded }}
+  resources:
+  - notebooks
+  verbs:
+  - get
