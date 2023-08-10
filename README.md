@@ -49,6 +49,8 @@ spec:
 
 Each `Notebook` CR has an annotation `opendatahub.io/link` that points directly to the JupyterLab UI. Technically, this is the only piece of information that needs sharing with the Lab user (besides their login credentials for the connected Identity Provider).
 
+In order to populate the empty notebook with some Lab material, one can replace the `/lab` at the end of the link with something like `/git-pull?repo=https%3A%2F%2Fgithub.com%2Fguimou%2Fdemo-notebooks.git&urlpath=lab%2Ftree%2Fdemo-notebooks.git%2Ftensorflow%2Ftensorflow_beginner.ipynb&branch=main` during the first launch. This example query string will populate the notebook from the https://github.com/guimou/demo-notebooks repo. For more details and examples see the [documentation](https://nbgitpuller.readthedocs.io/en/latest/) of [nbgitpuller](https://github.com/jupyterhub/nbgitpuller).
+
 ### Compute and Storage Resources
 
 These are parametrized via the child Helm Chart [values.yaml](rhods-notebook/values.yaml). They don't have to match the T-shirt sizes provided in RHODS dashboard.
