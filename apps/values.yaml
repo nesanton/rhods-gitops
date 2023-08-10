@@ -1,7 +1,6 @@
 users:
   - userthree@example.org
   - user-four@example.org
-  - user-six@example.org
 base_domain: apps.example.org
 spec:
   destination:
