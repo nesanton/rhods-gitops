@@ -3,13 +3,13 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: jupyter-nb-{{ . | replace "_" "-" | replace "@" "-" | replace "." "-" }}
+  name: {{ regexReplaceAll "[_\\W]" . "" }}-{{ . | sha256sum | trunc 8 }}
   namespace: openshift-gitops
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    namespace: rhods-notebooks
+    namespace: openshift-gitops
     server: {{ $.Values.spec.destination.server }}
   project: default
   source:
