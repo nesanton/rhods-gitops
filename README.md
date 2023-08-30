@@ -31,9 +31,11 @@ spec:
   project: default
   source:
     helm:
-      values: 'base_domain: apps.your.ingress.controller.url'
+      valuesObject: 'base_domain: apps.your.ingress.controller.url'
+      workbench_name: python-lab33
     path: apps
     repoURL: 'https://github.com/nesanton/rhods-gitops'
+    targetRevision: feature/namespaced
   syncPolicy:
     automated:
       prune: true

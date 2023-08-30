@@ -2,6 +2,7 @@
 user: place-holder
 user_urlencoded: place-2dholder
 base_domain: apps.example.org
+workbench_name: placeholder
 ###
 
 notebook:
