@@ -31,7 +31,7 @@ spec:
   project: default
   source:
     helm:
-      valuesObject: 
+      values: |
         base_domain: apps.your.ingress.controller.url
         workbench_name: python-lab33
     path: apps
