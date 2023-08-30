@@ -5,7 +5,7 @@ metadata:
     argocd.argoproj.io/sync-wave: "1"
   labels:
     opendatahub.io/dashboard: "true"
-  name: jupyterhub-nb-{{ .Values.workbench_name }}-pvc
+  name: {{ .Values.workbench_name }}
   namespace: {{ .Values.resource_name }}
 spec:
   accessModes:
