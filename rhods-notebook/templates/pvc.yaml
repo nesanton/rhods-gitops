@@ -1,10 +1,12 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
   labels:
     opendatahub.io/dashboard: "true"
-  name: jupyterhub-nb-{{ .Values.user_urlencoded }}-pvc
-  namespace: rhods-notebooks
+  name: jupyterhub-nb-{{ .Values.workbench_name }}-pvc
+  namespace: {{ .Values.resource_name }}
 spec:
   accessModes:
   - ReadWriteOnce

@@ -19,6 +19,8 @@ spec:
       values: |
         user: {{ . }}
         user_urlencoded: {{ . | replace "_" "-5f" | replace "-" "-2d" | replace "@" "-40" | replace "." "-2e" }}
+        resource_name: {{ regexReplaceAll "[_\\W]" . "" | trunc 8 }}-{{ . | sha256sum | trunc 8 }}
+        workbench_name: {{ $.Values.workbench_name }} 
         base_domain: {{ $.Values.base_domain }}
   syncPolicy:
     automated:

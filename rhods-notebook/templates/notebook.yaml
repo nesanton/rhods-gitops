@@ -1,18 +1,20 @@
+---
 apiVersion: kubeflow.org/v1
 kind: Notebook
 metadata:
   annotations:
+    argocd.argoproj.io/sync-wave: "2"
     notebooks.opendatahub.io/inject-oauth: "true"
-    notebooks.opendatahub.io/oauth-logout-url: https://rhods-dashboard-redhat-ods-applications.{{ .Values.base_domain }}/notebookController/{{ .Values.user_urlencoded }}/home
-    opendatahub.io/link: https://jupyter-nb-{{ .Values.user_urlencoded }}-rhods-notebooks.{{ .Values.base_domain }}/notebook/rhods-notebooks/jupyter-nb-{{ .Values.user_urlencoded }}
+    notebooks.opendatahub.io/oauth-logout-url: https://rhods-dashboard-redhat-ods-applications.{{ .Values.base_domain }}/projects/{{ .Values.resource_name }}?notebookLogout={{ .Values.workbench_name}}
+    opendatahub.io/link: https://{{ .Values.workbench_name }}-{{ .Values.resource_name }}.{{ .Values.base_domain }}/notebook/{{ .Values.resource_name }}/{{ .Values.workbench_name }}
     opendatahub.io/username: {{ .Values.user }}
   labels:
-    app: jupyter-nb-{{ .Values.user_urlencoded }}
+    app: {{ .Values.workbench_name }}
     opendatahub.io/dashboard: "true"
     opendatahub.io/odh-managed: "true"
     opendatahub.io/user: {{ .Values.user_urlencoded }}
-  name: jupyter-nb-{{ .Values.user_urlencoded }}
-  namespace: rhods-notebooks
+  name: {{ .Values.workbench_name }}
+  namespace: {{ .Values.resource_name }}
 spec:
   template:
     spec:
@@ -33,9 +35,9 @@ spec:
             --ServerApp.port=8888
                               --ServerApp.token=''
                               --ServerApp.password=''
-                              --ServerApp.base_url=/notebook/rhods-notebooks/jupyter-nb-{{ .Values.user_urlencoded }}
+                              --ServerApp.base_url=/notebook/{{ .Values.resource_name }}/{{ .Values.workbench_name }}
                               --ServerApp.quit_button=False
-                              --ServerApp.tornado_settings={"user":"{{ .Values.user_urlencoded }}","hub_host":"https://rhods-dashboard-redhat-ods-applications.{{ .Values.base_domain }}","hub_prefix":"/notebookController/{{ .Values.user_urlencoded }}"}
+                              --ServerApp.tornado_settings={"user":"{{ .Values.user_urlencoded }}","hub_host":"https://rhods-dashboard-redhat-ods-applications.{{ .Values.base_domain }}","hub_prefix":"/projects/{{ .Values.workbench_name }}"}
         - name: JUPYTER_IMAGE
           value: {{ .Values.notebook.image }}
         - name: JUPYTER_NOTEBOOK_PORT
@@ -45,14 +47,14 @@ spec:
         livenessProbe:
           failureThreshold: 3
           httpGet:
-            path: /notebook/rhods-notebooks/jupyter-nb-{{ .Values.user_urlencoded }}/api
+            path: /notebook/{{ .Values.resource_name }}/{{ .Values.workbench_name }}/api
             port: notebook-port
             scheme: HTTP
           initialDelaySeconds: 10
           periodSeconds: 5
           successThreshold: 1
           timeoutSeconds: 1
-        name: jupyter-nb-{{ .Values.user_urlencoded }}
+        name: {{ .Values.workbench_name }}
         ports:
         - containerPort: 8888
           name: notebook-port
@@ -60,7 +62,7 @@ spec:
         readinessProbe:
           failureThreshold: 3
           httpGet:
-            path: /notebook/rhods-notebooks/jupyter-nb-{{ .Values.user_urlencoded }}/api
+            path: /notebook/{{ .Values.resource_name }}/{{ .Values.workbench_name }}/api
             port: notebook-port
             scheme: HTTP
           initialDelaySeconds: 10
@@ -76,11 +78,12 @@ spec:
             memory: {{ .Values.notebook.resources.requests.memory }}
         volumeMounts:
         - mountPath: /opt/app-root/src
-          name: jupyterhub-nb-{{ .Values.user_urlencoded }}-pvc
+          name: {{ .Values.workbench_name }}
         workingDir: /opt/app-root/src
       enableServiceLinks: false
-      serviceAccountName: jupyter-nb-{{ .Values.user_urlencoded }}
+      serviceAccountName: {{ .Values.workbench_name }}
       volumes:
-      - name: jupyterhub-nb-{{ .Values.user_urlencoded }}-pvc
+      - name: {{ .Values.workbench_name }}
         persistentVolumeClaim:
-          claimName: jupyterhub-nb-{{ .Values.user_urlencoded }}-pvc
+          claimName: {{ .Values.workbench_name }}
+
