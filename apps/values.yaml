@@ -1,10 +1,12 @@
 users:
-  - userthree@example.org
-  - user-four@example.org
+  - rhods-user1
+  - rhods-user2
+  - rhods-user-with-a-very.long.name.and.some.dots
 base_domain: apps.example.org
+workbench_name: example-lab
 spec:
   destination:
     server: https://kubernetes.default.svc
   source:
     repoURL: https://github.com/nesanton/rhods-gitops
-    targetRevision: HEAD
+    targetRevision: feature/namespaced
