@@ -48,6 +48,15 @@ spec:
 * Once done with the lab - simply delete the parent app. The rest will be deleted automatically in cascade.
 
 ## Good to Know
+
+### Namespaced vs not-namespaced notebooks
+
+This example shows a namespaced notebook creation process. That is identical to creating a "Data Science Project" in the RHODS dashboard and then creating one workbench inside it as opposed to just creating one notebook based on the "Jupyter" tile on the "Allpications" tab.
+
+### Permissions
+
+Since we are provisioning the entire set of resources with automation, it could be easily possible to remove the self-provisioner role from users, so they cannot create the openshift projects (which is what the "Data Science Projects" actually are) themselves, which can prevent unpredictable cluster overuse. Additionally, we can potentially restrict their permissions to read-only for the created projects, so they cannot make more workbenches via RHODS interface. 
+
 ### Preparing the end User environment
 
 Each `Notebook` CR has an annotation `opendatahub.io/link` that points directly to the JupyterLab UI. Technically, this is the only piece of information that needs sharing with the Lab user (besides their login credentials for the connected Identity Provider).
