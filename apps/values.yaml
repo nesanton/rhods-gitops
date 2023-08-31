@@ -1,7 +1,5 @@
 users:
   - rhods-user1
-  - rhods-user2
-  - rhods-user-with-a-very.long.name.and.some.dots
 base_domain: apps.example.org
 workbench_name: example-lab
 spec:

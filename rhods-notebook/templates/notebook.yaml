@@ -12,7 +12,7 @@ metadata:
     app: {{ .Values.workbench_name }}
     opendatahub.io/dashboard: "true"
     opendatahub.io/odh-managed: "true"
-    opendatahub.io/user: {{ .Values.user_urlencoded }}
+    # opendatahub.io/user: {{ .Values.user_urlencoded }}
   name: {{ .Values.workbench_name }}
   namespace: {{ .Values.resource_name }}
 spec:
