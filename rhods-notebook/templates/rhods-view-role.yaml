@@ -28,3 +28,20 @@ rules:
   - get
   - list
   - watch
+# This is needed for notebook re-launch if it's put to sleep.
+# The setting "stop idle notebooks" effectively adds an annotation
+# to the notebook "TODO: <timestamp>". If the annotation is present,
+# the StatefulSet is scaled to 0. If it's gone - back to 1.
+# The stopping is done by rhods' service account, but to re-launch
+# our user has to be able to update or patch the notebook.
+- apiGroups:
+  - kubeflow.org
+  resources:
+  - notebooks
+  - notebooks/status
+  verbs:
+  - get
+  - list
+  - watch
+  - patch
+  - update
